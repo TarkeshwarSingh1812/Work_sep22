@@ -17,13 +17,22 @@ public class CustomerController implements CustomerApi {
     @Autowired
     private CustomerService service;
 
+    private static final Integer MIN_ID = 10000; // minLength for customerID is 5 digits
+    private static final Integer MAX_ID = 9999999; // maxLength for customerID is 8 digits
+
     @Override
     public ResponseEntity<Customer> createCustomer(@Valid Customer body) {
-        // TODO Auto-generated method stub
+        // TODO: Check that the name isn't null
 
-        // TODO: Check for that the name isn't null
+        if (body.getCustomerName() == null || body.getCustomerName().equals("")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         // TODO: Check that the id length is valid
+
+        if (Integer.valueOf(body.getCustomerID()) < MIN_ID || Integer.valueOf(body.getCustomerID()) > MAX_ID) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Customer response = service.createCustomer(body);
 
@@ -32,9 +41,11 @@ public class CustomerController implements CustomerApi {
 
     @Override
     public ResponseEntity<Customer> getCustomer(String id) {
-        // TODO Auto-generated method stub
-
         // TODO: Check that the id length is valid
+
+        if (Integer.valueOf(id) < MIN_ID || Integer.valueOf(id) > MAX_ID) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
         Customer response = service.getCustomer(id);
 
